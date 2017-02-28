@@ -33,15 +33,17 @@ set(VISIBLE_cmake_modules_IND_GUI_ENTRIES OPENCMISS_CMAKE_MODULES_ROOT)
 
 set(SETUP_PROJECTS CMAKE_MODULES MANAGE)
 
-set(OPENCMISS_SETUP_ORGANISIATION OpenCMISS CACHE STRING "The GitHub organisation to use for setup i.e., for the cmake_modules and manage repositories.")
+set(OPENCMISS_SETUP_ORGANISATION OpenCMISS CACHE STRING "The GitHub organisation to use for setup i.e., for the cmake_modules and manage repositories.")
+set(OPENCMISS_SETUP_BRANCH develop CACHE STRING "The cmake_modules and manage repositories branch to use for setup.")
 mark_as_advanced(OPENCMISS_SETUP_ORGANISATION)
+mark_as_advanced(OPENCMISS_SETUP_BRANCH)
 
 set(MANAGE_ORG ${OPENCMISS_SETUP_ORGANISATION})
 set(CMAKE_MODULES_ORG ${OPENCMISS_SETUP_ORGANISATION})
 set(MANAGE_REPO ${MANAGE_ORG}/manage)
 set(CMAKE_MODULES_REPO ${CMAKE_MODULES_ORG}/cmake_modules)
-set(MANAGE_BRANCH develop)
-set(CMAKE_MODULES_BRANCH develop)
+set(MANAGE_BRANCH ${OPENCMISS_SETUP_BRANCH})
+set(CMAKE_MODULES_BRANCH ${OPENCMISS_SETUP_BRANCH})
 
 set(KNOWN_OPENCMISS_VERSIONS develop)
 

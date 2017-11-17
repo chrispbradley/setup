@@ -309,7 +309,7 @@ if (OPENCMISS_PERFORM_INITIAL_BUILD)
         #list(APPEND MANAGE_CONFIGURE_ARGS -DOPENCMISS_CMAKE_MODULES_ROOT=${OPENCMISS_CMAKE_MODULES_ROOT})
         message(FATAL_ERROR "This case is not handled when performing initial build: ${OPENCMISS_SETUP_TYPE} [ind=${OPENCMISS_INDEPENDENT}], something has gone wrong!")
     endif ()
-    set(MANAGE_BUILD_CMD ${CMAKE_COMMAND} --build . --target do_config ${MULTICONFIG_BUILD_CONFIG})
+    set(MANAGE_BUILD_CMD ${CMAKE_COMMAND} --build . ${MULTICONFIG_BUILD_CONFIG})
     # set(MANAGE_BUILD_CMD "") # Remove me soon
 endif ()
 
@@ -334,8 +334,12 @@ endforeach ()
 
 set(_DEPENDS_MODULES)
 if (NOT OPENCMISS_SETUP_TYPE STREQUAL "libraries")
-    set(_DEPENDS_MODULES DEPENDS setup_modules)
-    ExternalProject_Add(setup_modules
+    if (EXISTS ${OPENCMISS_CMAKE_MODULES_SOURCE_DIR}/CMakeLists.txt)
+        message(STATUS "Disabling download of cmake modules.")
+        unset(DOWNLOAD_CMAKE_MODULES_CMD)
+    endif ()
+    set(_DEPENDS_MODULES DEPENDS setup_cmake_modules)
+    ExternalProject_Add(setup_cmake_modules
         ${DOWNLOAD_CMAKE_MODULES_CMD}
         SOURCE_DIR "${OPENCMISS_CMAKE_MODULES_SOURCE_DIR}"
         BINARY_DIR "${OPENCMISS_CMAKE_MODULES_BINARY_DIR}"
@@ -347,6 +351,10 @@ if (NOT OPENCMISS_SETUP_TYPE STREQUAL "libraries")
 endif ()
 
 if (NOT OPENCMISS_SETUP_TYPE STREQUAL "cmake_modules")
+    if (EXISTS ${OPENCMISS_MANAGE_SOURCE_DIR}/CMakeLists.txt)
+        message(STATUS "Disabling download of manage.")
+        unset(DOWNLOAD_MANAGE_CMD)
+    endif ()
     ExternalProject_Add(setup_manage
         ${_DEPENDS_MODULES}
         ${DOWNLOAD_MANAGE_CMD}
@@ -357,6 +365,15 @@ if (NOT OPENCMISS_SETUP_TYPE STREQUAL "cmake_modules")
         BUILD_COMMAND "${MANAGE_BUILD_CMD}"
         INSTALL_COMMAND "${MANAGE_INSTALL_CMD}"
     )
+    if (NOT OPENCMISS_SETUP_TYPE STREQUAL "dependencies")
+        add_custom_target(keytests
+            DEPENDS setup_manage
+            COMMAND ${CMAKE_COMMAND} --build . --target keytests --config $<CONFIG>
+            COMMENT "Running keytests"
+            WORKING_DIRECTORY ${OPENCMISS_MANAGE_BINARY_DIR}
+            VERBATIM
+        )
+    endif ()
 endif ()
 
 set(PRINT_SUMMARY TRUE)

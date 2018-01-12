@@ -40,6 +40,34 @@ set(OPENCMISS_SETUP_TYPE "standard" CACHE STRING "The type of OpenCMISS installa
 set(OPENCMISS_INDEPENDENT FALSE CACHE BOOL "Setup with independent locations for libraries, dependencies, modules, and manage script.")
 
 ##
+# .. _`opencmiss_setup_organisation`:
+#
+# OPENCMISS_SETUP_ORGANISATION
+# ----------------------------
+#
+# The GitHub organisation to use for setup i.e., for the cmake_modules and manage repositories.
+#
+# The default value is 'OpenCMISS'.
+#
+# See also: :cmake:`OPENCMISS_SETUP_BRANCH`
+
+set(OPENCMISS_SETUP_ORGANISATION OpenCMISS CACHE STRING "The GitHub organisation to use for setup i.e., for the cmake_modules and manage repositories.")
+
+##
+# .. _`opencmiss_setup_branch`:
+#
+# OPENCMISS_SETUP_BRANCH
+# ----------------------
+#
+# The branch of the cmake_modules and manage repositories to use for setup.
+#
+# The default value is 'develop'.
+#
+# See also: :cmake:`OPENCMISS_SETUP_ORGANISATION`
+
+set(OPENCMISS_SETUP_BRANCH develop CACHE STRING "The cmake_modules and manage repositories branch to use for setup.")
+
+##
 # .. _`opencmiss_perform_initial_build`:
 #
 # OPENCMISS_PERFORM_INITIAL_BUILD
